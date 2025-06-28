@@ -1,4 +1,3 @@
-// app/book/[cleanerId]/layout.tsx
 import { ReactNode } from 'react'
 
 interface LayoutProps {
