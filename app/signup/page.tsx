@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { fetchSignInMethodsForEmail } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { loadStripe } from '@stripe/stripe-js'
 
@@ -13,11 +13,9 @@ export default function Signup() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // ✅ Simple client-side email validation
   const isEmailValid = email.includes('@') && email.includes('.')
   const isPasswordValid = password.length >= 6
   const isNameValid = name.trim().length > 0
-
   const formValid = isEmailValid && isPasswordValid && isNameValid
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -25,15 +23,21 @@ export default function Signup() {
     setError(null)
 
     if (!formValid) return
-
     setLoading(true)
 
     try {
-      const tempUser = await createUserWithEmailAndPassword(auth, email, password)
-      await tempUser.user.delete()
+      // ✅ Check if email already exists
+      const methods = await fetchSignInMethodsForEmail(auth, email)
+      if (methods.length > 0) {
+        setError('Email is already in use.')
+        setLoading(false)
+        return
+      }
 
+      // Save user input for later use after Stripe redirect
       localStorage.setItem('signupData', JSON.stringify({ email, password, name }))
 
+      // Call backend to create Stripe session
       const res = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -41,14 +45,18 @@ export default function Signup() {
       })
 
       const data = await res.json()
-      const stripe = await stripePromise
-      await stripe?.redirectToCheckout({ sessionId: data.id })
-    } catch (err: any) {
-      console.error('❌ Firebase error:', err)
+      console.log('🔍 Checkout session response:', data)
 
-      if (err.code === 'auth/email-already-in-use') {
-        setError('Email is already in use.')
-      } else if (err.code === 'auth/invalid-email') {
+      if (!data.id) throw new Error('No Stripe session ID returned.')
+
+      const stripe = await stripePromise
+      if (!stripe) throw new Error('Stripe failed to load.')
+
+      const result = await stripe.redirectToCheckout({ sessionId: data.id })
+      if (result.error) throw new Error(result.error.message)
+    } catch (err: any) {
+      console.error('❌ Signup error:', err)
+      if (err.code === 'auth/invalid-email') {
         setError('Invalid email format.')
       } else {
         setError(err.message || 'Signup failed.')

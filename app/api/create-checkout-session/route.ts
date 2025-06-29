@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
+// ✅ Ensure your .env.local has this defined:
+// STRIPE_SECRET_KEY=sk_test_...
+// NEXT_PUBLIC_BASE_URL=http://localhost:3000 (or your deployed URL)
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-05-28.basil',
+  apiVersion: '2025-05-28.basil', // ✅ Use the latest stable API version
 })
 
 export async function POST(req: NextRequest) {
@@ -10,12 +14,18 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     console.log('📨 Received body:', body)
 
+    if (!body.email) {
+      return NextResponse.json({ error: 'Email is required' }, { status: 400 })
+    }
+
+    // ✅ Create Checkout Session
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
+      payment_method_types: ['card'],
       customer_email: body.email,
       line_items: [
         {
-          price: 'price_1RfHCHKsymaLZl8cGItbgbGS', // ✅ Replace with real Price ID!
+          price: 'price_1RfHCHKsymaLZl8cGItbgbGS', // ✅ Replace with your real Price ID
           quantity: 1,
         },
       ],
@@ -28,7 +38,6 @@ export async function POST(req: NextRequest) {
     })
 
     console.log('✅ Stripe session created:', session.id)
-
     return NextResponse.json({ id: session.id })
   } catch (err: any) {
     console.error('❌ Stripe session error:', err)
