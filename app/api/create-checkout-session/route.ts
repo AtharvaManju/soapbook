@@ -6,7 +6,7 @@ import Stripe from 'stripe'
 // NEXT_PUBLIC_BASE_URL=http://localhost:3000 (or your deployed URL)
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-05-28.basil', // ✅ Use the latest stable API version
+  apiVersion: '2025-05-28.basil' as any, // ✅ Use the latest stable API version
 })
 
 export async function POST(req: NextRequest) {
