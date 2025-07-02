@@ -49,12 +49,19 @@ export default function BookingsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-50 to-white flex justify-center py-10 px-4">
-      <div className="w-full max-w-xl bg-white p-8 rounded-3xl shadow-2xl space-y-8">
-        <h1 className="text-3xl font-extrabold text-purple-700 text-center">📅 Your Bookings</h1>
+    <main className="min-h-screen bg-gradient-to-br from-purple-800 via-purple-900 to-purple-800 flex justify-center items-center px-4 py-16 text-white relative">
+      {/* Background Blobs */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-[-100px] left-[-100px] w-[400px] h-[400px] bg-purple-600 opacity-30 rounded-full blur-3xl" />
+        <div className="absolute bottom-[-120px] right-[-120px] w-[400px] h-[400px] bg-fuchsia-400 opacity-20 rounded-full blur-3xl" />
+      </div>
+
+      {/* Glass Card */}
+      <div className="w-full max-w-xl bg-white/10 backdrop-blur-xl border border-white/10 p-10 rounded-3xl shadow-2xl space-y-10">
+        <h1 className="text-3xl font-extrabold text-white text-center">📅 Your Bookings</h1>
 
         {bookings.length === 0 ? (
-          <div className="text-center text-gray-500 text-base py-10">
+          <div className="text-center text-purple-100 text-base py-10">
             You don't have any bookings yet.
           </div>
         ) : (
@@ -62,19 +69,19 @@ export default function BookingsPage() {
             {bookings.map((booking) => (
               <li
                 key={booking.id}
-                className="flex justify-between items-center bg-gray-50 p-4 rounded-2xl border shadow-sm"
+                className="flex justify-between items-center bg-white/5 border border-white/10 p-4 rounded-2xl shadow-sm"
               >
                 <div>
-                  <p className="text-lg font-semibold text-gray-800">{booking.day}</p>
-                  <p className="text-sm text-gray-500">⏰ {booking.time}</p>
+                  <p className="text-lg font-semibold text-white">{booking.day}</p>
+                  <p className="text-sm text-purple-200">⏰ {booking.time}</p>
                 </div>
                 <div className="text-right space-y-1">
-                  <span className="block text-xs text-gray-400">
+                  <span className="block text-xs text-purple-300">
                     {booking.createdAt?.toDate?.().toLocaleString?.() || '—'}
                   </span>
                   <button
                     onClick={() => handleCancel(booking.id)}
-                    className="text-sm text-red-600 hover:underline transition"
+                    className="text-sm text-red-300 hover:underline transition"
                   >
                     ❌ Cancel
                   </button>

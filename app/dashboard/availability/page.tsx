@@ -41,9 +41,16 @@ export default function AvailabilityPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-50 to-white flex justify-center py-10 px-4">
-      <div className="w-full max-w-2xl bg-white p-8 rounded-3xl shadow-2xl space-y-8">
-        <h1 className="text-3xl font-extrabold text-purple-700 text-center">
+    <main className="min-h-screen bg-gradient-to-br from-purple-800 via-purple-900 to-purple-800 flex justify-center items-center px-4 py-16 text-white relative">
+      {/* Blurred Background Blobs */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-[-100px] left-[-100px] w-[400px] h-[400px] bg-purple-600 opacity-30 rounded-full blur-3xl" />
+        <div className="absolute bottom-[-120px] right-[-120px] w-[400px] h-[400px] bg-fuchsia-400 opacity-20 rounded-full blur-3xl" />
+      </div>
+
+      {/* Glass Card */}
+      <div className="w-full max-w-2xl bg-white/10 backdrop-blur-xl border border-white/10 p-10 rounded-3xl shadow-2xl space-y-10">
+        <h1 className="text-3xl font-extrabold text-white text-center">
           🕒 Set Your Weekly Availability
         </h1>
 
@@ -51,15 +58,15 @@ export default function AvailabilityPage() {
           {days.map((day) => (
             <div
               key={day}
-              className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-4"
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4"
             >
-              <span className="w-28 font-semibold text-gray-700">{day}</span>
+              <span className="w-28 font-semibold text-white">{day}</span>
               <div className="flex gap-3 flex-grow items-center">
                 <TimeInput
                   value={availability[day]?.start || ''}
                   onChange={(val) => handleTimeChange(day, 'start', val)}
                 />
-                <span className="text-gray-500 text-sm">to</span>
+                <span className="text-white text-sm">to</span>
                 <TimeInput
                   value={availability[day]?.end || ''}
                   onChange={(val) => handleTimeChange(day, 'end', val)}
@@ -92,7 +99,7 @@ function TimeInput({
       type="time"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full sm:w-40 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400 transition duration-150 text-sm"
+      className="w-full sm:w-40 bg-white/20 text-white placeholder-white/50 border border-white/20 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-300 transition duration-150 text-sm"
     />
   )
 }

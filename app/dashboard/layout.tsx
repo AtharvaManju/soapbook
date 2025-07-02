@@ -1,78 +1,60 @@
-// app/dashboard/layout.tsx
 'use client'
 
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth, db } from '@/lib/firebase'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { doc, getDoc } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [user, loading] = useAuthState(auth)
-  const [name, setName] = useState('')
   const router = useRouter()
 
   useEffect(() => {
-    const fetchName = async () => {
-      if (user) {
-        const snap = await getDoc(doc(db, 'users', user.uid))
-        if (snap.exists()) setName(snap.data()?.name || '')
+    const checkAuth = async () => {
+      if (!loading && !user) {
+        router.push('/login')
       }
     }
-    fetchName()
-  }, [user])
-
-  if (!loading && !user) {
-    router.push('/login')
-    return null
-  }
+    checkAuth()
+  }, [user, loading, router])
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-gradient-to-br from-purple-800 via-purple-900 to-purple-800 text-white">
       {/* Sidebar */}
-      <aside className="w-64 bg-purple-700 text-white flex flex-col py-8 px-6">
-        <h1 className="text-2xl font-bold mb-4">🧼 SoapBook</h1>
-
-        <nav className="space-y-4 flex-1">
-          <button
-            onClick={() => router.push('/dashboard')}
-            className="text-left w-full hover:underline"
-          >
-            🏠 Dashboard
-          </button>
-          <button
-            onClick={() => router.push('/dashboard/availability')}
-            className="text-left w-full hover:underline"
-          >
-            ✏️ Availability
-          </button>
-          <button
-            onClick={() => router.push('/dashboard/bookings')}
-            className="text-left w-full hover:underline"
-          >
-            📅 Bookings
-          </button>
-          <button
-            onClick={() => auth.signOut()}
-            className="text-left w-full hover:underline mt-6 text-red-200"
-          >
-            🚪 Log Out
-          </button>
-        </nav>
+      <aside className="w-64 p-6 bg-white/10 backdrop-blur-xl border-r border-white/10 shadow-md flex flex-col justify-between">
+        <div>
+          <h1 className="text-2xl font-bold mb-6">🧼 SoapBook</h1>
+          <nav className="space-y-4 text-sm">
+            <SidebarButton href="/dashboard">🏠 Dashboard</SidebarButton>
+            <SidebarButton href="/dashboard/availability">✏️ Availability</SidebarButton>
+            <SidebarButton href="/dashboard/bookings">📅 Bookings</SidebarButton>
+          </nav>
+        </div>
+        <button
+          onClick={() => auth.signOut()}
+          className="mt-6 w-full bg-white/10 hover:bg-white/20 text-sm font-semibold text-white py-2 px-4 rounded-lg border border-white/10 transition"
+        >
+          🚪 Log Out
+        </button>
       </aside>
 
-      {/* Main content */}
-      <main className="flex-1 p-10 overflow-y-auto relative">
-        {/* Profile on top right */}
-        <div className="absolute top-4 right-6 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-purple-700 text-white flex items-center justify-center font-bold text-lg">
-            {name ? name[0].toUpperCase() : '?'}
-          </div>
-          <span className="font-medium text-gray-700">{name || 'Cleaner'}</span>
-        </div>
+      {/* Main Content */}
+      <main className="flex-1 p-10 overflow-y-auto">
         {children}
       </main>
     </div>
+  )
+}
+
+function SidebarButton({ href, children }: { href: string; children: React.ReactNode }) {
+  const router = useRouter()
+  return (
+    <button
+      onClick={() => router.push(href)}
+      className="w-full text-left py-2 px-3 rounded-lg hover:bg-white/10 transition"
+    >
+      {children}
+    </button>
   )
 }

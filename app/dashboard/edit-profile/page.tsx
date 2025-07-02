@@ -54,19 +54,31 @@ export default function EditProfilePage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-50 to-white flex justify-center px-4 py-12">
-      <div className="w-full max-w-2xl bg-white p-8 rounded-3xl shadow-2xl space-y-8">
-        <h1 className="text-3xl font-extrabold text-purple-700 text-center">🧍 Edit Your Profile</h1>
+    <main className="min-h-screen bg-gradient-to-br from-purple-800 via-purple-900 to-purple-800 flex justify-center items-center px-4 py-16 text-white relative">
+      {/* Background Blobs */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-[-100px] left-[-100px] w-[400px] h-[400px] bg-purple-600 opacity-30 rounded-full blur-3xl" />
+        <div className="absolute bottom-[-120px] right-[-120px] w-[400px] h-[400px] bg-fuchsia-400 opacity-20 rounded-full blur-3xl" />
+      </div>
+
+      {/* Glass Card */}
+      <div className="w-full max-w-2xl bg-white/10 backdrop-blur-xl border border-white/10 p-10 rounded-3xl shadow-2xl space-y-10">
+        <h1 className="text-3xl font-extrabold text-white text-center">🧍 Edit Your Profile</h1>
 
         <div className="space-y-6">
+          {/* Profile Pic Upload */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Profile Picture</label>
+            <label className="block text-sm font-medium text-purple-100 mb-2">
+              Profile Picture
+            </label>
             <input
               type="file"
               onChange={handleImageChange}
-              className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-purple-600 file:text-white hover:file:bg-purple-700 transition"
+              className="block w-full text-sm text-purple-100 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-purple-600 file:text-white hover:file:bg-purple-700 transition"
             />
-            {uploading && <p className="mt-2 text-sm text-gray-500 italic">Uploading...</p>}
+            {uploading && (
+              <p className="mt-2 text-sm text-purple-200 italic">Uploading...</p>
+            )}
             {photoURL && (
               <div className="mt-4">
                 <Image
@@ -74,34 +86,39 @@ export default function EditProfilePage() {
                   alt="Profile"
                   width={100}
                   height={100}
-                  className="rounded-full shadow"
+                  className="rounded-full shadow-md border border-white/20"
                 />
               </div>
             )}
           </div>
 
+          {/* Bio Field */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
+            <label className="block text-sm font-medium text-purple-100 mb-2">Bio</label>
             <textarea
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               rows={4}
               placeholder="Tell us about your services..."
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 transition text-sm"
+              className="w-full bg-white/10 text-white placeholder-purple-300 border border-white/10 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-300 transition text-sm"
             />
           </div>
 
+          {/* ZIP Codes Field */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Service ZIP Codes</label>
+            <label className="block text-sm font-medium text-purple-100 mb-2">
+              Service ZIP Codes
+            </label>
             <input
               type="text"
               value={zipCodes}
               onChange={(e) => setZipCodes(e.target.value)}
               placeholder="e.g., 94110, 94016"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 transition text-sm"
+              className="w-full bg-white/10 text-white placeholder-purple-300 border border-white/10 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-300 transition text-sm"
             />
           </div>
 
+          {/* Save Button */}
           <button
             onClick={handleSave}
             className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-semibold text-lg transition"

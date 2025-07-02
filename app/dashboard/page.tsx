@@ -32,13 +32,20 @@ export default function DashboardHome() {
   if (!user) return null
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-50 to-white flex items-center justify-center px-4">
-      <div className="max-w-md w-full p-8 bg-white rounded-3xl shadow-2xl space-y-8">
-        <div className="text-center space-y-1">
-          <h1 className="text-4xl font-extrabold text-purple-700">
+    <main className="min-h-screen bg-gradient-to-br from-purple-800 via-purple-900 to-purple-800 flex items-center justify-center px-6 py-16 text-white relative">
+      {/* Background Blobs */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-[-100px] left-[-100px] w-[400px] h-[400px] bg-purple-600 opacity-30 rounded-full blur-3xl" />
+        <div className="absolute bottom-[-120px] right-[-120px] w-[400px] h-[400px] bg-fuchsia-400 opacity-20 rounded-full blur-3xl" />
+      </div>
+
+      {/* Glass Card */}
+      <div className="max-w-md w-full p-10 bg-white/10 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl space-y-8 text-center">
+        <div className="space-y-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-white">
             Welcome, {name || 'Cleaner'} 👋
           </h1>
-          <p className="text-gray-500 text-base">
+          <p className="text-purple-100 text-base">
             Manage your schedule and bookings
           </p>
         </div>
@@ -58,7 +65,7 @@ export default function DashboardHome() {
 
           <button
             onClick={() => auth.signOut()}
-            className="w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-4 rounded-xl text-lg font-semibold transition duration-150"
+            className="w-full bg-white/10 hover:bg-white/20 text-white py-3 px-4 rounded-xl text-lg font-semibold transition duration-150 border border-white/10"
           >
             🚪 Log Out
           </button>
@@ -78,7 +85,7 @@ function ActionButton({
   return (
     <button
       onClick={onClick}
-      className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded-xl text-lg font-semibold shadow-sm transition duration-150"
+      className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded-xl text-lg font-semibold shadow-md transition duration-150"
     >
       {children}
     </button>
