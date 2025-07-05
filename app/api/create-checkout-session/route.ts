@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       customer_email: body.email,
       line_items: [
         {
-          price: 'price_1RfHCHKsymaLZl8cGItbgbGS', // ✅ Replace with your real Price ID
+          price: 'price_1RhRtKKsymaLZl8c4NqfUBYg', // ✅ Replace with your real Price ID
           quantity: 1,
         },
       ],
